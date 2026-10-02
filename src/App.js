@@ -332,17 +332,23 @@ function App() {
 
           <div className="config-grid">
             <div className="counter-panel">
-              <label>Processes</label>
+              <label id="process-count-label">Processes</label>
               <div className="counter-row">
                 <button
                   type="button"
+                  aria-label="Remove one process"
+                  aria-describedby="process-count-label"
+                  disabled={simulation.processCount <= 1}
                   onClick={() => updateSimulationSize(Math.max(1, simulation.processCount - 1), simulation.resourceCount)}
                 >
                   −
                 </button>
-                <span>{simulation.processCount}</span>
+                <span key={simulation.processCount} aria-live="polite">{simulation.processCount}</span>
                 <button
                   type="button"
+                  aria-label="Add one process"
+                  aria-describedby="process-count-label"
+                  disabled={simulation.processCount >= 10}
                   onClick={() => updateSimulationSize(Math.min(10, simulation.processCount + 1), simulation.resourceCount)}
                 >
                   +
@@ -351,17 +357,23 @@ function App() {
             </div>
 
             <div className="counter-panel">
-              <label>Resources</label>
+              <label id="resource-count-label">Resources</label>
               <div className="counter-row">
                 <button
                   type="button"
+                  aria-label="Remove one resource"
+                  aria-describedby="resource-count-label"
+                  disabled={simulation.resourceCount <= 1}
                   onClick={() => updateSimulationSize(simulation.processCount, Math.max(1, simulation.resourceCount - 1))}
                 >
                   −
                 </button>
-                <span>{simulation.resourceCount}</span>
+                <span key={simulation.resourceCount} aria-live="polite">{simulation.resourceCount}</span>
                 <button
                   type="button"
+                  aria-label="Add one resource"
+                  aria-describedby="resource-count-label"
+                  disabled={simulation.resourceCount >= 6}
                   onClick={() => updateSimulationSize(simulation.processCount, Math.min(6, simulation.resourceCount + 1))}
                 >
                   +

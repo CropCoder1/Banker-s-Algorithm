@@ -369,12 +369,59 @@ button {
   transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 
+.counter-row button:active {
+  transform: translateY(1px) scale(0.92);
+  background: linear-gradient(145deg, rgba(81, 184, 255, 0.42), rgba(61, 94, 255, 0.28));
+  box-shadow:
+    0 0 22px rgba(81, 184, 255, 0.48),
+    inset 0 2px 7px rgba(4, 16, 32, 0.34);
+}
+
+.counter-row button:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+}
+
+.counter-row button:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+  box-shadow: none;
+}
+
+.counter-row button:disabled:hover {
+  transform: none;
+}
+
 .counter-row span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.7rem;
   font-weight: 700;
   min-width: 40px;
   text-align: center;
   color: #f5faff;
+  animation: count-bump 0.32s cubic-bezier(0.2, 0.8, 0.25, 1.2) both;
+}
+
+@keyframes count-bump {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.72);
+    color: var(--accent-2);
+    text-shadow: 0 0 18px rgba(81, 184, 255, 0.8);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.2);
+    color: #fff;
+    text-shadow: 0 0 16px rgba(81, 184, 255, 0.65);
+  }
+  100% {
+    transform: scale(1);
+    color: #f5faff;
+    text-shadow: 0 0 0 transparent;
+  }
 }
 
 .resource-edit-row {
@@ -758,5 +805,15 @@ button {
 
   .counter-row {
     justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .counter-row span {
+    animation: none;
+  }
+
+  .counter-row button {
+    transition: none;
   }
 }
