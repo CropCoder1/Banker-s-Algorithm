@@ -1,70 +1,90 @@
-# Getting Started with Create React App
+# Banker's Algorithm — Deadlock Avoidance Simulator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive, browser-based Operating Systems learning tool for exploring how the **Banker's Algorithm** evaluates resource allocation and avoids deadlocks. Configure processes and resource types, edit the matrices, and see the safety check recalculate instantly.
 
-## Available Scripts
+> **Frontend only:** all calculations run locally in your browser. No backend or account is required.
 
-In the project directory, you can run:
+## Description
 
-### `npm start`
+The Banker's Algorithm is a deadlock-avoidance method that grants a resource request only when the resulting system state remains safe. This simulator makes the algorithm easier to understand by connecting the Allocation, Max, Need, and Available values to a visible safety trace and safe sequence.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Highlights
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Configure **1–10 processes** and **1–6 resource types**.
+- Rename resource types and enter the total number of instances for each.
+- Edit the Allocation and Max matrices with immediate feedback.
+- Automatically calculate **Need = Max − Allocation** and **Available = Total − Allocated**.
+- Follow each safety-check step, including the process need, work vector, and resources released.
+- Try a resource request for a selected process and see whether granting it preserves a safe state.
+- Review the resulting safe sequence or understand why the current state is unsafe.
+- Reset to start a fresh simulation.
+- Responsive dark interface with glass-style panels, blue accents, and subtle motion.
 
-### `npm test`
+## Getting started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Requirements
 
-### `npm run build`
+- Node.js 18 or newer
+- npm
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Install and run
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The development server opens at [http://localhost:3000](http://localhost:3000).
 
-### `npm run eject`
+### Production build
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm run build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The optimized static site is generated in the `build/` directory.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Using the simulator
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Set the number of processes and resource types.
+2. Enter the **total instances** available for every resource type.
+3. Fill in the Allocation and Max matrices. For every cell, Max should be greater than or equal to Allocation.
+4. Review the automatically calculated Need matrix and Available vector.
+5. Read the safety-check trace and safe sequence.
+6. To test a request, select a process, enter its requested resource vector, and choose **Simulate Request**.
 
-## Learn More
+If a total is missing or is smaller than the amount already allocated, the simulator reports that input issue instead of presenting an invalid safety result.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## How the safety check works
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+For each resource type `j` and process `i`:
 
-### Code Splitting
+```text
+Need[i][j] = Max[i][j] - Allocation[i][j]
+Available[j] = Total[j] - sum(Allocation[i][j])
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The simulator starts with `Work = Available`. It repeatedly finds an unfinished process whose `Need` is no greater than `Work` for every resource. Once that process can finish, its allocated resources are returned to `Work`. If every process can finish, the order is a **safe sequence**; if the algorithm gets stuck before all processes finish, the state is unsafe.
 
-### Analyzing the Bundle Size
+For a resource request, the simulator first checks that the request does not exceed either the process's remaining need or the available resources. It then temporarily evaluates the resulting state and accepts the request only if that state is safe. The request simulation does not permanently change the allocation matrix.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Built with
 
-### Making a Progressive Web App
+- React
+- JavaScript
+- Create React App
+- CSS
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Project layout
 
-### Advanced Configuration
+```text
+src/
+  App.js       Simulator UI and Banker's Algorithm calculations
+  App.css      Responsive theme, layout, and animations
+  index.js     React entry point
+  index.css    Global styles
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Educational note
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is intended for learning and demonstration. It models the classic Banker's Algorithm and does not manage real operating-system processes or resources.
